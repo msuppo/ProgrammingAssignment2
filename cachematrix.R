@@ -1,9 +1,9 @@
-## The following functions work together to create a square invertible matrix
+## Given a square invertible matrix, those 2 functions work together to create a square invertible matrix
 ## and make the inverse of the matrix available in the cache environment
 
 
-## makeCacheMatrix creates and returns a list of functions
-## used by cacheSolve to get or set the inverted matrix in cache
+## makeCacheMatrix creates a special "matrix" object that can cache its inverse. 
+## Returns a list of functions used by cacheSolve to get or set the inverted matrix in cache
 ##              1. set the matrix
 ##              2. get the matrix
 ##              3. set the inverse
@@ -17,8 +17,8 @@ makeCacheMatrix <- function(x = matrix()) {
   
   # set the matrix in the working environment
   set <- function(y) { 
-    x <<- y  # caches the inputted matrix so that cacheSolve can check whether it has changed
-    cache <<- NULL  # sets the value of cache (the matrix inverse if used cacheSolve) to NULL
+    x <<- y  
+    cache <<- NULL  
   }
     
   # get the value of the matrix
@@ -37,35 +37,32 @@ makeCacheMatrix <- function(x = matrix()) {
 }
 
 
-## Return a matrix that is the inverse of 'x'
-## cacheSolve calcluates the inverse of the matrix created in makeCacheMatrix
-## If the inverted matrix does not exist in cache,
-## it it created in the working environment and it's inverted value
-## is stored in cache
+
+## cacheSolve: computes the inverse of the special "matrix" returned by makeCacheMatrix above. 
+## If the inverse has already been calculated (and the matrix has not changed), then the cachesolve 
+## it retrieves the inverse from the cache.
+## @x: output of makeCacheMatrix()
 
 cacheSolve <- function(x, ...) {
   
   ## attempt to get the inverse of the matrix stored in cache
   cache <- x$getInverse()
-  
-  # return inverted matrix from cache if it exists
-  # else create the matrix in working environment
+
+  # if the inverse has already been calculated
   if (!is.null(cache)) {
+    # it is get from the cache and skips the computation 
     message("getting cached data")
-    
-    # display matrix in console
     return(cache)
   }
   
-  # create matrix since it does not exist
+  # otherwise, calculates the inverse 
   matrix <- x$get()
   
   # set and return inverse of matrix
   cache <- solve(matrix, ...)
   
-  # set inverted matrix in cache
+  # sets the value of the inverse in the cache via the setInverse function
   x$setInverse(cache)
   
-  # display matrix in console
   return (cache)
 }
