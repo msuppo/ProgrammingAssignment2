@@ -1,7 +1,6 @@
 ## Given a square invertible matrix, those 2 functions work together to create a square invertible matrix
 ## and make the inverse of the matrix available in the cache environment
 
-
 ## makeCacheMatrix creates a special "matrix" object that can cache its inverse. 
 ## Returns a list of functions used by cacheSolve to get or set the inverted matrix in cache
 ##              1. set the matrix
